@@ -42,5 +42,9 @@ Route::group(['prefix' => 'v1'], function () {
             Route::put('/{id}', [App\Http\Controllers\MaterialController::class, 'update']);
             Route::delete('/{id}', [App\Http\Controllers\MaterialController::class, 'delete']);
         });
+
+        Route::group(['prefix' => 'material-receipt'], function () {
+            Route::post('/', [App\Http\Controllers\MaterialReceiptController::class, 'create']);
+        });
     });
 });
