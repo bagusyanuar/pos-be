@@ -22,11 +22,10 @@ class MaterialService implements MaterialInterface
             $schema->hydrateBody();
 
             $data = [
+                'unit_id' => $schema->getUnitId(),
                 'name' => $schema->getName()
             ];
-            $material = Material::create($data);
-
-            $material->units()->attach($schema->getUnits());
+            Material::create($data);
             DB::commit();
             return ServiceResponse::statusCreated("successfully create material");
         } catch (\Throwable $th) {
@@ -39,7 +38,7 @@ class MaterialService implements MaterialInterface
     {
         try {
             $queryParams->hydrateQuery();
-            $query = Material::with(['units'])
+            $query = Material::with(['unit'])
                 ->when($queryParams->getParam(), function ($q) use ($queryParams) {
                     /** @var Builder $q */
                     return $q->where('name', 'LIKE', "%{$queryParams->getParam()}%");
@@ -64,7 +63,7 @@ class MaterialService implements MaterialInterface
     public function findByID($id): ServiceResponse
     {
         try {
-            $material = Material::with(['units'])
+            $material = Material::with(['unit'])
                 ->where('id', '=', $id)
                 ->first();
             if (!$material) {
@@ -94,12 +93,11 @@ class MaterialService implements MaterialInterface
             $schema->hydrateBody();
 
             $data = [
+                'unit_id' => $schema->getUnitId(),
                 'name' => $schema->getName()
             ];
 
             $material->update($data);
-
-            $material->units()->sync($schema->getUnits());
             DB::commit();
             return ServiceResponse::statusOK("successfully update material");
         } catch (\Throwable $th) {
@@ -111,7 +109,7 @@ class MaterialService implements MaterialInterface
     public function delete($id): ServiceResponse
     {
         try {
-            $material = Material::with(['units'])
+            $material = Material::with([])
                 ->where('id', '=', $id)
                 ->first();
             if (!$material) {

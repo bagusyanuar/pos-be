@@ -20,6 +20,6 @@ class Unit extends Model
 
     public function materials()
     {
-        return $this->belongsToMany(Material::class, 'material_units');
+        return $this->hasMany(Material::class, 'unit_id');
     }
 }

@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('unit_id')->nullable();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('unit_id')->references('id')
+                ->on('units')
+                ->onDelete('set null');
         });
     }
 

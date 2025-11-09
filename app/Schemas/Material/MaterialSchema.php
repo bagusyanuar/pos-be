@@ -7,23 +7,22 @@ use App\Commons\Libs\Http\BaseSchema;
 class MaterialSchema extends BaseSchema
 {
     private $name;
-    private $units;
+    private $unitId;
 
     protected function rules()
     {
         return [
             'name' => 'required|string|unique:units,name',
-            'units' => 'required|array|min:1',
-            'units.*' => 'required|uuid'
+            'unit_id' => 'required|uuid'
         ];
     }
 
     public function hydrateBody()
     {
         $name = $this->body['name'];
-        $units = $this->body['units'];
+        $unitId = $this->body['unit_id'];
         $this->setName($name)
-            ->setUnits($units);
+            ->setUnitId($unitId);
     }
 
     /**
@@ -47,21 +46,21 @@ class MaterialSchema extends BaseSchema
     }
 
     /**
-     * Get the value of units
+     * Get the value of unitId
      */
-    public function getUnits()
+    public function getUnitId()
     {
-        return $this->units;
+        return $this->unitId;
     }
 
     /**
-     * Set the value of units
+     * Set the value of unitId
      *
      * @return  self
      */
-    public function setUnits($units)
+    public function setUnitId($unitId)
     {
-        $this->units = $units;
+        $this->unitId = $unitId;
 
         return $this;
     }

@@ -14,13 +14,12 @@ class MaterialResource extends BaseResource
             'name' => $this->name,
         ];
 
-        if ($this->relationLoaded('units')) {
-            $data['units'] = $this->units->map(function ($unit) {
-                return [
-                    'id' => $unit->id,
-                    'name' => $unit->name
-                ];
-            });
+        if ($this->relationLoaded('unit')) {
+            $unit = $this->getRelation('unit');
+            $data['unit'] = $unit ? [
+                'id' => $unit->id,
+                'name' => $unit->name
+            ] : null;
         }
         return $data;
     }

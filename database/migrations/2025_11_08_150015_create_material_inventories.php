@@ -14,16 +14,11 @@ return new class extends Migration
         Schema::create('material_inventories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('material_id')->nullable();
-            $table->uuid('unit_id')->nullable();
             $table->decimal('qty', 15, 2)->default(0);
             $table->timestamps();
             $table->foreign('material_id')
                 ->references('id')
                 ->on('materials')
-                ->onDelete('set null');
-            $table->foreign('unit_id')
-                ->references('id')
-                ->on('units')
                 ->onDelete('set null');
         });
     }

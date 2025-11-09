@@ -15,11 +15,12 @@ class Material extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'unit_id',
         'name',
     ];
 
-    public function units()
+    public function unit()
     {
-        return $this->belongsToMany(Unit::class, 'material_units');
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 }
