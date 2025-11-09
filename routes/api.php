@@ -27,6 +27,14 @@ Route::group(['prefix' => 'v1'], function () {
             Route::delete('/{id}', [App\Http\Controllers\UnitController::class, 'delete']);
         });
 
+        Route::group(['prefix' => 'supplier'], function () {
+            Route::post('/', [App\Http\Controllers\SupplierController::class, 'create']);
+            Route::get('/', [App\Http\Controllers\SupplierController::class, 'findAll']);
+            Route::get('/{id}', [App\Http\Controllers\SupplierController::class, 'findByID']);
+            Route::put('/{id}', [App\Http\Controllers\SupplierController::class, 'update']);
+            Route::delete('/{id}', [App\Http\Controllers\SupplierController::class, 'delete']);
+        });
+
         Route::group(['prefix' => 'material'], function () {
             Route::post('/', [App\Http\Controllers\MaterialController::class, 'create']);
             Route::get('/', [App\Http\Controllers\MaterialController::class, 'findAll']);

@@ -3,42 +3,37 @@
 namespace App\Services;
 
 use App\Commons\Libs\Http\ServiceResponse;
-use App\Interfaces\MaterialInterface;
-use App\Models\Material;
-use App\Schemas\Material\MaterialQuery;
-use App\Schemas\Material\MaterialSchema;
-use Illuminate\Support\Facades\DB;
+use App\Interfaces\SupplierInterface;
+use App\Models\Supplier;
+use App\Schemas\Supplier\SupplierQuery;
+use App\Schemas\Supplier\SupplierSchema;
+use App\Schemas\Unit\UnitQuery;
 
-class MaterialService implements MaterialInterface
+class SupplierService implements SupplierInterface
 {
-    public function create(MaterialSchema $schema): ServiceResponse
+    public function create(SupplierSchema $schema): ServiceResponse
     {
         try {
-            DB::beginTransaction();
             $validator = $schema->validate();
             if ($validator->fails()) {
                 return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
             }
             $schema->hydrateBody();
-
             $data = [
-                'unit_id' => $schema->getUnitId(),
                 'name' => $schema->getName()
             ];
-            Material::create($data);
-            DB::commit();
-            return ServiceResponse::statusCreated("successfully create material");
+            Supplier::create($data);
+            return ServiceResponse::statusCreated("successfully create supplier");
         } catch (\Throwable $th) {
-            DB::rollBack();
             return ServiceResponse::internalServerError($th->getMessage());
         }
     }
 
-    public function findAll(MaterialQuery $queryParams): ServiceResponse
+    public function findAll(SupplierQuery $queryParams): ServiceResponse
     {
         try {
             $queryParams->hydrateQuery();
-            $query = Material::with(['unit'])
+            $query = Supplier::with([])
                 ->when($queryParams->getParam(), function ($q) use ($queryParams) {
                     /** @var Builder $q */
                     return $q->where('name', 'LIKE', "%{$queryParams->getParam()}%");
@@ -54,7 +49,7 @@ class MaterialService implements MaterialInterface
             } else {
                 $data = $query->get();
             }
-            return ServiceResponse::statusOK("successfully get materials", $data);
+            return ServiceResponse::statusOK("successfully get suppliers", $data);
         } catch (\Throwable $th) {
             return ServiceResponse::internalServerError($th->getMessage());
         }
@@ -63,45 +58,35 @@ class MaterialService implements MaterialInterface
     public function findByID($id): ServiceResponse
     {
         try {
-            $material = Material::with(['unit'])
-                ->where('id', '=', $id)
+            $supplier = Supplier::where('id', '=', $id)
                 ->first();
-            if (!$material) {
-                return ServiceResponse::notFound("material not found");
+            if (!$supplier) {
+                return ServiceResponse::notFound("supplier not found");
             }
-            return ServiceResponse::statusOK("successfully get material", $material);
+            return ServiceResponse::statusOK("successfully get supplier", $supplier);
         } catch (\Throwable $th) {
             return ServiceResponse::internalServerError($th->getMessage());
         }
     }
 
-    public function update($id, MaterialSchema $schema): ServiceResponse
+    public function update($id, SupplierSchema $schema): ServiceResponse
     {
         try {
-            DB::beginTransaction();
-            $material = Material::with(['unit'])
-                ->where('id', '=', $id)
-                ->first();
-            if (!$material) {
-                return ServiceResponse::notFound("material not found");
-            }
-
             $validator = $schema->validate();
             if ($validator->fails()) {
                 return ServiceResponse::unprocessableEntity($validator->errors()->toArray());
             }
             $schema->hydrateBody();
-
-            $data = [
-                'unit_id' => $schema->getUnitId(),
+            $supplier = Supplier::where('id', '=', $id)
+                ->first();
+            if (!$supplier) {
+                return ServiceResponse::notFound("supplier not found");
+            }
+            $supplier->update([
                 'name' => $schema->getName()
-            ];
-
-            $material->update($data);
-            DB::commit();
-            return ServiceResponse::statusOK("successfully update material");
+            ]);
+            return ServiceResponse::statusOK("successfully update supplier");
         } catch (\Throwable $th) {
-            DB::rollBack();
             return ServiceResponse::internalServerError($th->getMessage());
         }
     }
@@ -109,15 +94,13 @@ class MaterialService implements MaterialInterface
     public function delete($id): ServiceResponse
     {
         try {
-            $material = Material::with([])
-                ->where('id', '=', $id)
+            $supplier = Supplier::where('id', '=', $id)
                 ->first();
-            if (!$material) {
-                return ServiceResponse::notFound("material not found");
+            if (!$supplier) {
+                return ServiceResponse::notFound("supplier not found");
             }
-
-            $material->delete();
-            return ServiceResponse::statusOK("successfully delete material");
+            $supplier->delete();
+            return ServiceResponse::statusOK("successfully delete supplier");
         } catch (\Throwable $th) {
             return ServiceResponse::internalServerError($th->getMessage());
         }
