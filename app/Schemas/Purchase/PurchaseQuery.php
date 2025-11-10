@@ -1,23 +1,30 @@
 <?php
 
-namespace App\Schemas\MaterialReceipt;
+namespace App\Schemas\Purchase;
 
 use App\Commons\Libs\Http\BaseSchema;
 
-class MaterialReceiptQuery extends BaseSchema
+class PurchaseQuery extends BaseSchema
 {
     private $param;
     private $page;
     private $perPage;
+    private $dateStart;
+    private $dateEnd;
 
     public function hydrateQuery()
     {
         $param = $this->query['param'] ?? '';
         $page = $this->query['page'] ?? '';
         $perPage = $this->query['per_page'] ?? '';
+        $dateStart = !empty(trim($this->query['date_start'] ?? '')) ? $this->query['date_start'] : null;
+        $dateEnd = !empty(trim($this->query['date_end'] ?? '')) ? $this->query['date_end'] : null;
+
         $this->setParam($param)
             ->setPage($page)
-            ->setPerPage($perPage);
+            ->setPerPage($perPage)
+            ->setDateStart($dateStart)
+            ->setDateEnd($dateEnd);
     }
 
     /**
@@ -76,6 +83,46 @@ class MaterialReceiptQuery extends BaseSchema
     public function setPerPage($perPage)
     {
         $this->perPage = $perPage;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateStart
+     */
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * Set the value of dateStart
+     *
+     * @return  self
+     */
+    public function setDateStart($dateStart)
+    {
+        $this->dateStart = $dateStart;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of dateEnd
+     */
+    public function getDateEnd()
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * Set the value of dateEnd
+     *
+     * @return  self
+     */
+    public function setDateEnd($dateEnd)
+    {
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }

@@ -43,8 +43,10 @@ Route::group(['prefix' => 'v1'], function () {
             Route::delete('/{id}', [App\Http\Controllers\MaterialController::class, 'delete']);
         });
 
-        Route::group(['prefix' => 'material-receipt'], function () {
-            Route::post('/', [App\Http\Controllers\MaterialReceiptController::class, 'create']);
+        Route::group(['prefix' => 'purchase'], function () {
+            Route::post('/', [App\Http\Controllers\PurchaseController::class, 'create']);
+            Route::get('/', [App\Http\Controllers\PurchaseController::class, 'findAll']);
+            Route::get('/{id}', [App\Http\Controllers\PurchaseController::class, 'findByID']);
         });
     });
 });

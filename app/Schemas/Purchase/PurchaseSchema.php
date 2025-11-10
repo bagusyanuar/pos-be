@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Schemas\MaterialReceipt;
+namespace App\Schemas\Purchase;
 
 use App\Commons\Libs\Http\BaseSchema;
 
-class MaterialReceiptSchema extends BaseSchema
+class PurchaseSchema extends BaseSchema
 {
     private $date;
     private $receiptNumber;
